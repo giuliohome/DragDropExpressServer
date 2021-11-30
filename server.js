@@ -10,10 +10,12 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/myapi/heroes', (req, res) => {
-  const myList = [
-    { name: 'John', age: 39 },
-    { name: 'Sarah', age: 26 },
-  ];
+  let myList = [];
+  try {
+    myList = fs.readdirSync('upload');
+  } catch (error) {
+    console.error(error.message);
+  }
   res.send(myList);
 });
 
