@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.get('/myapi/heroes', (req, res) => {
   let myList = [];
   try {
@@ -20,6 +21,24 @@ app.get('/myapi/heroes', (req, res) => {
 });
 
 const userFiles = path.join(__dirname, 'upload');
+
+app.get('/myapi/downloadFile', (req, res) => {
+  try {
+    const filename = req.header('filename');
+    console.log('downloadFile ', filename);
+    if (filename) {
+      const location = path.join(userFiles, filename);
+      const buff = fs.readFileSync(location);
+      res.send(buff);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.sendStatus(500);
+  }
+});
+
 app.put('/myapi/files', (req, res) => {
   const file = req.body;
   const base64data = file.content.replace(/^data:.*,/, '');
